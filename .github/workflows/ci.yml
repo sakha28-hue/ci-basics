@@ -6,9 +6,11 @@ on:
 jobs:
   health-checks:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
+
+      - name: Make scripts executable
+        run: chmod +x scripts/*.sh
 
       - name: Run disk check
         run: ./scripts/disk_check.sh
@@ -20,8 +22,9 @@ jobs:
     needs: health-checks
     runs-on: ubuntu-latest
     environment: production
-
+    if: github.ref == 'refs/heads/main'
     steps:
+      - uses: actions/checkout@v4
       - name: Simulate deployment
         run: echo "Deploying to production..."
 
