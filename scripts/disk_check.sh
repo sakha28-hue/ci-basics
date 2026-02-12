@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-THRESHOLD=${THRESHOLD:-80}
+THRESHOLD=1
 USAGE=$(df / | awk 'NR==2 {print $5}' | sed 's/%//')
 
 echo "Disk usage: ${USAGE}% (threshold=${THRESHOLD}%)"
