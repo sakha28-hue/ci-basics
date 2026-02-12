@@ -8,6 +8,9 @@ jobs:
   health-checks:
     runs-on: ubuntu-latest
 
+    env:
+      THRESHOLD: 70
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
