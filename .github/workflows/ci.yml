@@ -15,6 +15,29 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Create runtime config from secret
+        env:
+          API_KEY: ${{ secrets.FAKE_API_KEY }}
+        run: | 
+          umask 077
+          mkdir -p runtime
+          printf '{"api_key":"%s"}\n' "$API_KEY" > runtime/config.json
+          echo "Config created: runtime/config.json"
+          ls -l runtime/config.json
+
+      - name: Use config without printing secret
+        run: | 
+          python3 - <<'PY'
+          import json
+          with open("runtime/config.json") as f:
+            cfg = json.load(f)
+          print("Config key length:", len(cfg["api_key"]))
+          print("Config key prefix:", cfg["api_key"][:4] + "****")
+          PY
+      - name: Cleanup runtime secrets
+        if: always()
+        run: rm -rf runtime
+
       - name: Check if secret is injected
         env:
           API_KEY: ${{ secrets.FAKE_API_KEY }}
