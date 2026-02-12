@@ -16,16 +16,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Use secret safely (masked)
+      - name: Check if secret is injected
         env:
           API_KEYS: ${{ secrets.FAKE_API_KEY }}
         run: |
-          if [ -z "$API_KEY" ]; then
-            echo "Secret not injected!"
-            exit 1
-          fi
-          echo "Secret injected successfully"
-
+          [ -n "$API_KEY" ] && echo "Secret injected" || (echo "Secret missing" && exit 1)
+            
       - name: Make scripts executable
         run: chmod +x scripts/*.sh
 
