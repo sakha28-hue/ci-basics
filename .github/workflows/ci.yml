@@ -2,7 +2,6 @@ name: CI - Health Checks
 
 on:
   push:
-  pull_request:
 
 jobs:
   health-checks:
@@ -18,7 +17,8 @@ jobs:
 
       - name: Check if secret is injected
         env:
-          API_KEYS: ${{ secrets.FAKE_API_KEY }}
+          API_KEY: ${{ secrets.FAKE_API_KEY }}
+
         run: |
           [ -n "$API_KEY" ] && echo "Secret injected" || (echo "Secret missing" && exit 1)
             
