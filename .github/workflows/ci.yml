@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      THRESHOLD: 70
+      THRESHOLD: 80
 
     steps:
       - name: Checkout repository
