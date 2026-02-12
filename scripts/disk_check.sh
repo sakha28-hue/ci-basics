@@ -1,12 +1,12 @@
 #!/bin/bash
 set -euo pipefail
 
-THRESHOLD=${THRESHOLD:-80}
+DISK_THRESHOLD=${DISK_THRESHOLD:-80}
 USAGE=$(df / | awk 'NR==2 {print $5}' | sed 's/%//')
 
-echo "Disk usage: ${USAGE}% (threshold=${THRESHOLD}%)"
+echo "Disk usage: ${USAGE}% (threshold=${DISK_THRESHOLD}%)"
 
-if [ "$USAGE" -gt "$THRESHOLD" ]; then
+if [ "$USAGE" -gt "$DISK_THRESHOLD" ]; then
   echo "FAIL: Disk usage above threshold"
   exit 1
 fi
