@@ -1,0 +1,23 @@
+name: CI - Health Checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  health-checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Make scripts executable
+        run: chmod +x scripts/*.sh
+
+      - name: Run disk check
+        run: ./scripts/disk_check.sh
+
+      - name: Run memory check
+        run: ./scripts/memory_check.sh
+
