@@ -15,12 +15,16 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Use secret safely (masked)
         env:
           API_KEYS: ${{ secrets.FAKE_API_KEY }}
         run: |
-          echo "API key lenght is: ${#API_KEY}"
-          echo "API key starts with: ${API_KEY:0:4}****"
+          if [ -z "$API_KEY" ]; then
+            echo "Secret not injected!"
+            exit 1
+          fi
+          echo "Secret injected successfully"
 
       - name: Make scripts executable
         run: chmod +x scripts/*.sh
