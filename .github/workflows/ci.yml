@@ -18,16 +18,16 @@ jobs:
       - name: Run memory check
         run: ./scripts/memory_check.sh
       
-      -name: Ensure prod secret NOT accessible in CI
-       env:
-         Token: ${{ secrets.PROD_DEPLOY_TOKEN }}
-       run: | 
-        if [ -z "$TOKEN" ]; then
-          echo "Correct: CI cannot access prod secret"
-        else
-          echo "Error: CI should NOT access prod secret"
-          exit 1 
-        fi
+      - name: Ensure prod secret NOT accessible in CI
+        env:
+          Token: ${{ secrets.PROD_DEPLOY_TOKEN }}
+        run: | 
+          if [ -z "$TOKEN" ]; then
+            echo "Correct: CI cannot access prod secret"
+          else
+            echo "Error: CI should NOT access prod secret"
+            exit 1 
+          fi
 
   deploy:
     needs: health-checks
