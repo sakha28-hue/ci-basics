@@ -38,4 +38,9 @@ jobs:
       - uses: actions/checkout@v4
       - name: Simulate deployment
         run: echo "Deploying to production..."
+      - name: Ensure prod secret accessible in deploy
+        env:
+          TOKEN: ${{ secrets.PROD_DEPLOY_TOKEN }}
+        run: | 
+          [ -n "$TOKEN" ] && echo "Prod secret available" || (echo "Missing prod secret" && exit 1)
 
