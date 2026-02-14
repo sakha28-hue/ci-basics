@@ -17,6 +17,12 @@ jobs:
 
       - name: Run memory check
         run: ./scripts/memory_check.sh
+
+      - name: Build Docker image (CI)
+        run: docker build -t ci-basics:ci .
+
+      - name: List built images
+        run: docker images | head -n 20
       
       - name: Ensure prod secret NOT accessible in CI
         env:
