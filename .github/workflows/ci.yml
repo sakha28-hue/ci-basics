@@ -19,7 +19,7 @@ jobs:
         run: ./scripts/memory_check.sh
 
       - name: Verify Dockerfile exists
-      - run: test -f Dockerfile && echo "Dockerfile found" || (echo "Dockerfile missinf" && exit 1)
+        run: test -f Dockerfile && echo "Dockerfile found" || (echo "Dockerfile missinf" && exit 1)
 
       - name: Build Docker image (CI)
         run: docker build -t ci-basics:ci .
