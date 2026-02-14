@@ -21,11 +21,11 @@ jobs:
       - name: Verify Dockerfile exists
         run: test -f Dockerfile && echo "Dockerfile found" || (echo "Dockerfile missinf" && exit 1)
 
-      - name: Build Docker image (CI)
-        run: docker build -t ci-basics:ci .
+      - name: Build Docker image with commit SHA
+        run: docker build -t ci-basics:${{ github.sha }} .
 
       - name: List built images
-        run: docker images | head -n 20
+        run: docker images | grep ci-basics
       
       - name: Ensure prod secret NOT accessible in CI
         env:
