@@ -60,11 +60,23 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
-      - name: Simulate deployment
-        run: echo "Deploying to production..."
-      - name: Ensure prod secret accessible in deploy
-        env:
-          TOKEN: ${{ secrets.PROD_DEPLOY_TOKEN }}
-        run: | 
-          [ -n "$TOKEN" ] && echo "Prod secret available" || (echo "Missing prod secret" && exit 1)
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      
+      - name: Pull image from GHCR
+        run: |
+          IMAGE="ghcr.io/${{ github.repository }}:${{ github.sha }}"
+          docker pull "$IMAGE"
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+      
+      - name: Run container (demo)
+        run: |
+          docker rm -f ci-demo || true
+          docker run -d --name ci-demo -p 8080:8080 -e APP_ENV=prod "$IMAGE"
+          sleep 2
+          curl -s http://localhost:8080
+      
+      - name: Cleanup container
+        if: always()
+        run: docker rm -f ci-demo || true
 
