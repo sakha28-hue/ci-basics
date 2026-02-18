@@ -3,6 +3,10 @@ name: CI + Deploy
 on:
   push:
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   health-checks:
     runs-on: ubuntu-latest
@@ -37,6 +41,17 @@ jobs:
             echo "Error: CI should NOT access prod secret"
             exit 1 
           fi
+       - name: Log in to GHCR
+         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+       - name: Build Docker image (GHCR tag)
+         run: |
+           IMAGE="ghcr.io/${{ github.repository }}:${{ github.sha }}"
+           docker build -t "$IMAGE" .
+           echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+
+       - name: Push image to GHCR
+         run: docker push "$IMAGE"
 
   deploy:
     needs: health-checks
